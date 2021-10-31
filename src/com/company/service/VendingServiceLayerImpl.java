@@ -3,6 +3,7 @@ package com.company.service;
 import com.company.dao.VendingDao;
 import com.company.dto.Product;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,9 +37,9 @@ public class VendingServiceLayerImpl implements VendingServiceLayer {
 
 
     @Override
-    public void isSufficient(int inputAmt, int price) {
+    public void isSufficient(String inputAmt, String price) throws RuntimeException {
         try {
-            if (price > inputAmt) {
+            if (Double.parseDouble(price) > Double.parseDouble(inputAmt)) {
                 throw new InsufficientFundsException();
             }
         } catch (InsufficientFundsException e) //specific exception first
@@ -60,6 +61,9 @@ public class VendingServiceLayerImpl implements VendingServiceLayer {
     public void loadProducts() {
         dao.readProducts();
     }
+
+    @Override
+    public void saveProducts() { dao.writeFile(); }
 
 
 

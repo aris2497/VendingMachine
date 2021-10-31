@@ -9,5 +9,5 @@ public interface VendingDao {
     Product getProduct(int id);
     void removeProduct(int id);
     void readProducts();
-
+    void writeFile();
 }

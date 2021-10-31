@@ -3,10 +3,10 @@ package com.company.dto;
 public class Product {
     private int id;
     private String name;
-    private int price;
+    private String price;
     private int number;
 
-    public Product(int id, String name, int price, int number) {
+    public Product(int id, String name, String price, int number) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,7 +17,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 

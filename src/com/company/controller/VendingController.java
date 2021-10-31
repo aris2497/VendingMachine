@@ -4,6 +4,8 @@ import com.company.service.Change;
 import com.company.service.VendingServiceLayer;
 import com.company.view.VendingView;
 
+import java.math.BigDecimal;
+
 public class VendingController {
     VendingView view;
     VendingServiceLayer service;
@@ -14,17 +16,16 @@ public class VendingController {
         this.service = service;
     }
      public void run(){
-        service.loadProducts();
+        service.loadProducts(); //reading from the file
         while(!view.printAvailableItems(service.getAvailableProducts()).equals("x")){
-            int inputAmt = view.readInputAmt();
+            String inputAmt = view.readInputAmt();
             int selected = view.getSelectedProduct() - 1; //array indexing starting from 0
-            int selectedPrice = service.getAllProducts().get(selected).getPrice();
+            String selectedPrice = service.getAllProducts().get(selected).getPrice();
             service.isSufficient(inputAmt, selectedPrice);
-            Change.calculateChange(inputAmt, selectedPrice);
+            BigDecimal change = Change.calculateChange(inputAmt, selectedPrice);
+            Change.calculateReminder(change);
             service.updateInventory(selected);
-
         }
-
-
+        service.saveProducts(); //writing to the file
      }
 }

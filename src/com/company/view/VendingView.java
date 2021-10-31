@@ -35,7 +35,7 @@ public class VendingView {
                 product.getNumber());
     }
 
-    public int readInputAmt() {
-        return io.readInt("Please enter money before selecting");
+    public String readInputAmt() {
+        return io.readString("Please enter money before selecting");
     }
 }
