@@ -4,6 +4,7 @@ import com.company.dto.Coins;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 
 /**
  * class that takes the amount of change due to the user (in pennies)
@@ -23,7 +24,8 @@ public class Change {
         return number;
     }
 
-    public static void calculateReminder(BigDecimal reminder) {
+    public static ArrayList<String> calculateReminder(BigDecimal reminder) {
+        ArrayList<String> coins = null;
         BigDecimal quarters = BigDecimal.valueOf(0);
         BigDecimal dimes = BigDecimal.valueOf(0);
         BigDecimal nickles = BigDecimal.valueOf(0);
@@ -48,10 +50,12 @@ public class Change {
 
         BigDecimal pennies = reminderInPennies.setScale(0, RoundingMode.DOWN);
 
-        System.out.println("Quarters: " + quarters.toString() +
-                "\nDimes: " + dimes.toString() +
-                "\nNickles: " + nickles.toString() +
-                "\nPennies: " + pennies.toString());
+        coins.add(quarters.toString());
+        coins.add(dimes.toString());
+        coins.add(nickles.toString());
+        coins.add(pennies.toString());
+
+        return coins;
     }
 
     public static BigDecimal calculateCoins(BigDecimal reminder, Coins coins) {

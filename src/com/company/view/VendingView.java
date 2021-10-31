@@ -35,6 +35,13 @@ public class VendingView {
                 product.getNumber());
     }
 
+    public String toStringCoins(String quarters, String dimes, String nickles, String pennies){
+        return String.format("Quarters: " + quarters.toString() +
+                "\nDimes: " + dimes +
+                "\nNickles: " + nickles +
+                "\nPennies: " + pennies);
+    }
+
     public String readInputAmt() {
         return io.readString("Please enter money before selecting");
     }
