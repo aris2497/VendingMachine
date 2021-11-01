@@ -2,8 +2,8 @@ package com.company.service;
 
 import com.company.dao.VendingDao;
 import com.company.dto.Product;
+import com.company.service.Exceptions.InsufficientFundsException;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +15,10 @@ public class VendingServiceLayerImpl implements VendingServiceLayer {
         this.dao = dao;
     }
 
+    /**
+     *
+     * @return list containing all products, including products where 0 available
+     */
     @Override
     public ArrayList<Product> getAllProducts() {
         return (ArrayList<Product>) dao.getAllProducts();
@@ -24,6 +28,8 @@ public class VendingServiceLayerImpl implements VendingServiceLayer {
     /**
      * filtering through the array of all products to get only
      * available products to display them to the user
+     *
+     * @return list containing only available products, excluding products where 0 available
      *
      */
     @Override
@@ -36,19 +42,28 @@ public class VendingServiceLayerImpl implements VendingServiceLayer {
     }
 
 
+    /**
+     *
+     * @param inputAmt - money entered
+     * @param price - price of selected item
+     * @return if enough money entered
+     * @throws RuntimeException - not enough money
+     */
     @Override
-    public void isSufficient(String inputAmt, String price) throws RuntimeException {
+    public boolean isSufficient(String inputAmt, String price) throws RuntimeException {
+        boolean isSufficient = true;
         try {
             if (Double.parseDouble(price) > Double.parseDouble(inputAmt)) {
+                isSufficient = false;
                 throw new InsufficientFundsException();
+
             }
         } catch (InsufficientFundsException e) //specific exception first
         {
             e.howtoRecover(inputAmt);
             e.getCause();
-        } catch (Exception e) {
-            e.getCause();
         }
+        return isSufficient;
     }
 
 

@@ -2,10 +2,7 @@ package com.company.view;
 
 import com.company.dto.Product;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class VendingView {
     UserIO io;
@@ -13,8 +10,12 @@ public class VendingView {
         this.io = io;
     }
 
+    public void printChange(String stringToPrint){
+        io.print("Change: " + stringToPrint + "$");
+    }
+
     public String printAvailableItems(ArrayList<Product> products){
-        io.print("Available Items");
+        io.print("\n---Available Items---");
 
         for (Product product : products) {
             String productInfo = toString(product);
@@ -23,26 +24,33 @@ public class VendingView {
         return io.readString("Press [x] to exit the program or press enter to continue.");
     }
 
+    public void printStringToContinue(){
+        System.out.println("Continue...");
+    }
+    public void printStringToEnd(){
+        System.out.println("Enjoy!");
+    }
+
     public int getSelectedProduct() {
-        return io.readInt("Please select product number",1,20);
+        return io.readItemIndex("Please select product number",1,5);
     }
 
     public String toString(Product product) {
-        return String.format("#%s %s: %s$, %s items",
+        return String.format("#%s %s: %s$, %s available",
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getNumber());
     }
 
-    public String toStringCoins(String quarters, String dimes, String nickles, String pennies){
-        return String.format("Quarters: " + quarters.toString() +
+    public void toStringCoins(String quarters, String dimes, String nickles, String pennies){
+        System.out.println(String.format("Quarters: " + quarters +
                 "\nDimes: " + dimes +
                 "\nNickles: " + nickles +
-                "\nPennies: " + pennies);
+                "\nPennies: " + pennies));
     }
 
     public String readInputAmt() {
-        return io.readString("Please enter money before selecting");
+        return io.readMoneyInput("Please enter money before selecting");
     }
 }

@@ -1,5 +1,10 @@
 package com.company.view;
 
+import com.company.service.Exceptions.InsufficientFundsException;
+import com.company.service.Exceptions.MoneyFormatException;
+import com.company.service.Exceptions.NoItemInventoryException;
+import com.company.service.Exceptions.ZeroFundsException;
+
 import java.util.Scanner;
 
 public class VendingConsoleImpl implements UserIO{
@@ -24,11 +29,11 @@ public class VendingConsoleImpl implements UserIO{
      * @param msgPrompt - String explaining what information you want from the user.
      * @return the answer to the message as string
      */
-    @Override
+    /*@Override
     public String readString(String msgPrompt) {
         System.out.println(msgPrompt);
         return console.nextLine();
-    }
+    }*/
 
     /**
      * A simple method that takes in a message to display on the console,
@@ -39,22 +44,32 @@ public class VendingConsoleImpl implements UserIO{
      * @return the answer to the message as integer
      */
     @Override
-    public int readInt(String msgPrompt) {
+    public String readMoneyInput(String msgPrompt) {
         boolean invalidInput = true;
-        int num = 0;
+        Double num = 0.0;
+
         while (invalidInput) {
             try {
-                // print the message msgPrompt (ex: asking for the # of cats!)
                 String stringValue = this.readString(msgPrompt);
                 // Get the input line, and try and parse
-                num = Integer.parseInt(stringValue); // if it's 'bob' it'll break
-                invalidInput = false; // or you can use 'break;'
-            } catch (NumberFormatException e) {
-                // If it explodes, it'll go here and do this.
-                this.print("Input error. Please try again.");
+                num = Double.parseDouble(stringValue); // if it's 'bob' it'll break
+                if (num==0){
+                    invalidInput = true;
+                    throw new ZeroFundsException();
+                }
+                else {
+                    invalidInput = false;
+                }
+            } catch (NumberFormatException ex){
+                invalidInput = true;
+                //System.out.println("Money has wrong format");
+            }
+            catch (ZeroFundsException ex){
+                ex.howToRecover();
             }
         }
-        return num;
+        String output = Double.toString(num);
+        return output;
     }
 
     /**
@@ -68,13 +83,25 @@ public class VendingConsoleImpl implements UserIO{
      * @return an integer value as an answer to the message prompt within the min/max range
      */
     @Override
-    public int readInt(String msgPrompt, int min, int max) {
-        int result;
-        do {
-            result = readInt(msgPrompt);
-        } while (result < min || result > max);
+    public int readItemIndex(String msgPrompt, int min, int max) {
+        boolean invalidInput = true;
+        int num = 0;
 
-        return result;
+        while (invalidInput) {
+            try {
+                String stringValue = this.readString(msgPrompt);
+                num = Integer.parseInt(stringValue);  // Get the input line, and try and parse
+                if (num < min || num > max) {
+                    invalidInput = true;
+                    throw new NoItemInventoryException();
+                } else {
+                    invalidInput = false;
+                }
+            } catch (NoItemInventoryException err) {
+                err.howtoRecover(num);
+            }
+        }
+        return num;
     }
 
     /**
@@ -116,6 +143,12 @@ public class VendingConsoleImpl implements UserIO{
         return result;
     }
 
+    @Override
+    public String readString(String msgPrompt) {
+        System.out.println(msgPrompt);
+        return console.nextLine();
+    }
+
     /**
      * A simple method that takes in a message to display on the console,
      * and continually reprompts the user with that message until they enter a float
@@ -153,6 +186,11 @@ public class VendingConsoleImpl implements UserIO{
         } while (result < min || result > max);
 
         return result;
+    }
+
+    @Override
+    public int readItemIndex(String prompt) {
+        return 0;
     }
 
     /**
